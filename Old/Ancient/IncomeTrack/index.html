@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Income Analysis</title>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+</head>
+
+<body>
+
+<style>
+h3 {
+    text-decoration: underline;
+}
+td, th {
+    text-align: left;
+    padding-right: 1em;
+}
+tr.projection {
+    font-style: italic;
+}
+</style>
+
+<div id="content" style="font-family: 'Andale Mono', AndaleMono, Menlo, Consolas, monospace; font-size: small;"></div>
+
+<!-- <script src=".js/jquery-2.1.3.min.js"></script> -->
+<script src="libs/underscore-1.8.2.min.js"></script>
+<script src="libs/markdown.min.js"></script>
+<script src="libs/moment.min.js"></script>
+<script src="libs/sprintf.js"></script>
+
+<script src="Paychecks.js"></script>
+<script src="Giving.js"></script>
+<script src="Report.js"></script>
+
+<script text=text/javascript">
+
+function createHtmlFragment(htmlStr) {
+    // from: http://stackoverflow.com/a/814649/908430
+    // also, see: http://ejohn.org/blog/dom-documentfragments/
+    var frag = document.createDocumentFragment(),
+        temp = document.createElement('div');
+    temp.innerHTML = htmlStr;
+    while (temp.firstChild) {
+        frag.appendChild(temp.firstChild);
+    }
+    return frag;
+}
+
+function setContent(htmlStr) {
+    var results = document.getElementById('content')
+    results.innerHTML = ""
+
+    var fragment = createHtmlFragment(htmlStr);
+    results.appendChild(fragment);
+}
+
+try {
+    setContent( genReport() )
+}
+catch(err) {
+    setContent( err );
+}
+
+</script>
+
+</body>
+
+</html>
