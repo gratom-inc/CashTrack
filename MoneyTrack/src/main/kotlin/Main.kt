@@ -1,3 +1,7 @@
+import assets.schwab.SchwabCheckingData
+import assets.schwab.parseDate
+import assets.schwab.readSchwabCheckingCsv
+
 val schwabCheckingCutoffDateA = parseDate("05/01/2022") // parseDate("10/23/2020")
 
 fun process(): List<String> {

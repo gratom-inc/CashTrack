@@ -1,3 +1,5 @@
+package assets.schwab
+
 import TransactionsCategorize.SchwabCheckingCategories.ccPayment
 import TransactionsCategorize.SchwabCheckingCategories.identifyDepositCategory
 import TransactionsCategorize.SchwabCheckingCategories.identifyWithdrawalCategory
