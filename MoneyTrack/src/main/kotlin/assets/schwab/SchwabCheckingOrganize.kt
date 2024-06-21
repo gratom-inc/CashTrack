@@ -3,8 +3,8 @@ package assets.schwab
 import TransactionsCategorize.SchwabCheckingCategories.ccPayment
 import TransactionsCategorize.SchwabCheckingCategories.identifyDepositCategory
 import TransactionsCategorize.SchwabCheckingCategories.identifyWithdrawalCategory
-import decSum
 import io.github.rtmigo.dec.Dec
+import sum
 
 class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
     val deposits: SchwabCheckingGroups
@@ -113,7 +113,7 @@ class SchwabCheckingGroups(rows: List<SchwabCheckingRow>, categorizer: (SchwabCh
     val grandTotal get(): Dec = computeGrandTotal()
     private fun computeGrandTotal(): Dec {
         val totals: List<Pair<String, Dec>> = computeTotals()
-        val grandTotal: Dec = decSum(totals.map { it.second })
+        val grandTotal: Dec = totals.map { it.second }.sum()
         return grandTotal
     }
 
@@ -128,7 +128,7 @@ class SchwabCheckingGroups(rows: List<SchwabCheckingRow>, categorizer: (SchwabCh
         for ((desc, total) in totals) {
             s += "$desc: $total"
         }
-        val grandTotal = decSum(totals.map { it.second })
+        val grandTotal = totals.map { it.second }.sum()
         s += "Total: $grandTotal"
         return s
     }
@@ -162,7 +162,7 @@ fun List<SchwabCheckingRow>.cleanStrings(): List<String> {
 }
 
 fun List<SchwabCheckingRow>.computeTotal(): Dec {
-    val depositTotal = decSum(map { it.deposit ?: Dec.ZERO })
-    val withdrawalTotal = decSum(map { it.withdrawal ?: Dec.ZERO })
+    val depositTotal = map { it.deposit ?: Dec.ZERO }.sum()
+    val withdrawalTotal = map { it.withdrawal ?: Dec.ZERO }.sum()
     return depositTotal - withdrawalTotal
 }

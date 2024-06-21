@@ -10,6 +10,4 @@ fun <T : TrDateRow> ArrayList<out T>.filterFrom(cutoffDate: LocalDate): List<T> 
     return this.filter { it.trDate >= cutoffDate }
 }
 
-fun decSum(decs: Iterable<Dec>): Dec {
-    return decs.sumOf { it }
-}
+fun Iterable<Dec>.sum(): Dec = sumOf { it }

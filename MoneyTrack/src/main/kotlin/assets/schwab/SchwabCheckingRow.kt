@@ -108,8 +108,7 @@ fun validateSchwabChecking(c: ArrayList<SchwabCheckingRow>) {
             expectedBalance += row.deposit
         }
 
-        val diff = expectedBalance.compareTo(row.balance)
-        if (diff != 0) {
+        if (!expectedBalance.equalsTo(row.balance)) {
             if (c[i + 1].desc == "Overdraft Protection Transfer" ||
                 "Overdraft Transfer from Brokerage -5483" in c[i + 1].desc
             ) {
