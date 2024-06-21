@@ -162,7 +162,7 @@ fun List<SchwabCheckingRow>.cleanStrings(): List<String> {
 }
 
 fun List<SchwabCheckingRow>.computeTotal(): BigDecimal {
-    val depositTotal = this.sumOf { it.deposit ?: 0.toBigDecimal() }
-    val withdrawalTotal = this.sumOf { it.withdrawal ?: 0.toBigDecimal() }
+    val depositTotal = sumOf { it.deposit ?: 0.toBigDecimal() }
+    val withdrawalTotal = sumOf { it.withdrawal ?: 0.toBigDecimal() }
     return depositTotal - withdrawalTotal
 }

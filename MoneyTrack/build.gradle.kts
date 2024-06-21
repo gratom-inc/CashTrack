@@ -13,8 +13,8 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.commons/commons-csv
     implementation("org.apache.commons:commons-csv:1.11.0")
 
+    // Dec is a simple wrapper around BigDecimal
     implementation("io.github.rtmigo:dec:0.1.8")
-    implementation("com.github.labai:deci:0.0.1")
 
     testImplementation(kotlin("test"))
 }
