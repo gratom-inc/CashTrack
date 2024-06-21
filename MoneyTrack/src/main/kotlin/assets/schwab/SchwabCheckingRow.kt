@@ -1,8 +1,8 @@
 package assets.schwab
 
 import TrDateRow
+import io.github.rtmigo.dec.Dec
 import readCsv
-import java.math.BigDecimal
 import java.text.NumberFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -13,13 +13,11 @@ val moneyFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale.US)
 
 fun parseDate(s: String): LocalDate = LocalDate.parse(s, dateFormat)
 fun parseInt(s: String): Int? = if (s == "") null else s.toInt()
-fun parseMoney(s: String): BigDecimal? =
+fun parseMoney(s: String): Dec? =
     if (s == "") null
     else if (s.first() == '(' && s.last() == ')')
         parseMoney(s.substring(1, s.length - 2))
-    else moneyFormat.parse(s).toFloat().toBigDecimal()
-
-val zero = BigDecimal(0)
+    else Dec(moneyFormat.parse(s).toFloat().toBigDecimal())
 
 enum class SchwabCheckingTransactionType {
     ACH,
@@ -41,9 +39,9 @@ data class SchwabCheckingRow(
     val trType: SchwabCheckingTransactionType,
     val checkNum: Int?,
     val desc: String,
-    val withdrawal: BigDecimal?,
-    val deposit: BigDecimal?,
-    val balance: BigDecimal,
+    val withdrawal: Dec?,
+    val deposit: Dec?,
+    val balance: Dec,
 ) : TrDateRow {
     constructor(
         trDate: String,
@@ -60,13 +58,13 @@ data class SchwabCheckingRow(
         desc,
         parseMoney(withdrawal).let {
             if (it != null) {
-                require(it > zero)
+                require(it > Dec.ZERO)
             }
             it
         },
         parseMoney(deposit).let {
             if (it != null) {
-                require(it > zero)
+                require(it > Dec.ZERO)
             }
             it
         },
@@ -78,8 +76,8 @@ data class SchwabCheckingRow(
         return "$trDate | $amt | $desc"
     }
 
-    val depositN get(): BigDecimal = deposit ?: zero
-    val withdrawalN get(): BigDecimal = withdrawal ?: zero
+    val depositN get(): Dec = deposit ?: Dec.ZERO
+    val withdrawalN get(): Dec = withdrawal ?: Dec.ZERO
 }
 
 fun makeSchwabCheckingRow(csvFields: List<String>): SchwabCheckingRow {

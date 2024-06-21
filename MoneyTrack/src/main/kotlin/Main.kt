@@ -1,8 +1,6 @@
 import assets.schwab.SchwabCheckingData
 import assets.schwab.parseDate
 import assets.schwab.readSchwabCheckingCsv
-import io.github.rtmigo.dec.Dec
-import io.github.rtmigo.dec.sumOf
 
 val schwabCheckingCutoffDateA = parseDate("05/01/2022") // parseDate("10/23/2020")
 
@@ -16,7 +14,7 @@ fun process(): List<String> {
     return logs
 }
 
-fun main(args: Array<String>) {
+fun main() {
     println("Processing...")
 
     val startTime = System.currentTimeMillis()
@@ -28,11 +26,6 @@ fun main(args: Array<String>) {
         println(it)
     }
     println("\nProcessing took $timeTaken ms")
-
-    val x2 = listOf<Dec>(Dec(1), Dec(2), Dec(3))
-    val x2s = x2.sumOf { it }
-    println("x2: ${x2}")
-    println("x2 sum: ${x2s}")
 
     // println("Hello World!")
     // Try adding program arguments via Run/Debug configuration.

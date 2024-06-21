@@ -3,8 +3,8 @@ package assets.schwab
 import TransactionsCategorize.SchwabCheckingCategories.ccPayment
 import TransactionsCategorize.SchwabCheckingCategories.identifyDepositCategory
 import TransactionsCategorize.SchwabCheckingCategories.identifyWithdrawalCategory
-
-import java.math.BigDecimal
+import decSum
+import io.github.rtmigo.dec.Dec
 
 class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
     val deposits: SchwabCheckingGroups
@@ -12,7 +12,7 @@ class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
     val otherWithdrawals: SchwabCheckingGroups
 
     val firstRow: SchwabCheckingRow
-    val startingBalance: BigDecimal
+    val startingBalance: Dec
     val lastRow: SchwabCheckingRow
 
     init {
@@ -110,15 +110,15 @@ class SchwabCheckingGroups(rows: List<SchwabCheckingRow>, categorizer: (SchwabCh
         }
     }
 
-    val grandTotal get(): BigDecimal = computeGrandTotal()
-    private fun computeGrandTotal(): BigDecimal {
-        val totals: List<Pair<String, BigDecimal>> = computeTotals()
-        val grandTotal: BigDecimal = totals.map { it.second }.sumOf { it }
+    val grandTotal get(): Dec = computeGrandTotal()
+    private fun computeGrandTotal(): Dec {
+        val totals: List<Pair<String, Dec>> = computeTotals()
+        val grandTotal: Dec = decSum(totals.map { it.second })
         return grandTotal
     }
 
-    val totals get(): Map<String, BigDecimal> = computeTotals().toMap()
-    private fun computeTotals(): List<Pair<String, BigDecimal>> =
+    val totals get(): Map<String, Dec> = computeTotals().toMap()
+    private fun computeTotals(): List<Pair<String, Dec>> =
         groups.map { (desc, rows) -> Pair(desc, rows.computeTotal()) }
             .sortedByDescending { it.second }
 
@@ -128,7 +128,7 @@ class SchwabCheckingGroups(rows: List<SchwabCheckingRow>, categorizer: (SchwabCh
         for ((desc, total) in totals) {
             s += "$desc: $total"
         }
-        val grandTotal = totals.map { it.second }.sumOf { it }
+        val grandTotal = decSum(totals.map { it.second })
         s += "Total: $grandTotal"
         return s
     }
@@ -161,8 +161,8 @@ fun List<SchwabCheckingRow>.cleanStrings(): List<String> {
     }
 }
 
-fun List<SchwabCheckingRow>.computeTotal(): BigDecimal {
-    val depositTotal = sumOf { it.deposit ?: 0.toBigDecimal() }
-    val withdrawalTotal = sumOf { it.withdrawal ?: 0.toBigDecimal() }
+fun List<SchwabCheckingRow>.computeTotal(): Dec {
+    val depositTotal = decSum(map { it.deposit ?: Dec.ZERO })
+    val withdrawalTotal = decSum(map { it.withdrawal ?: Dec.ZERO })
     return depositTotal - withdrawalTotal
 }
