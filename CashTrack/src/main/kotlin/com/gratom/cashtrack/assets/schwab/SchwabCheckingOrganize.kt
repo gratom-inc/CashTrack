@@ -99,16 +99,16 @@ class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
 }
 
 class SchwabCheckingGroups(rows: List<SchwabCheckingRow>, categorizer: (SchwabCheckingRow) -> String) {
-    val groups: MutableMap<String, ArrayList<SchwabCheckingRow>> = HashMap()
+    val groups: MutableMap<String, SchwabCheckingGroup> = HashMap()
 
     init {
         rows.forEach {
-            val category = categorizer(it)
+            val groupName = categorizer(it)
             // Refactor: e.g. groups.getOrDefault(category, ArrayList()).add(it)
-            if (category !in groups) {
-                groups[category] = ArrayList()
+            if (groupName !in groups) {
+                groups[groupName] = SchwabCheckingGroup(groupName, ArrayList())
             }
-            groups.getValue(category).add(it)
+            groups.getValue(groupName).rows.add(it)
         }
     }
 
@@ -121,7 +121,7 @@ class SchwabCheckingGroups(rows: List<SchwabCheckingRow>, categorizer: (SchwabCh
 
     val totals get(): Map<String, BigDecimal> = computeTotals().toMap()
     private fun computeTotals(): List<Pair<String, BigDecimal>> =
-        groups.map { (desc, rows) -> Pair(desc, rows.computeTotal()) }
+        groups.map { (_, group) -> Pair(group.groupName, group.computeTotal()) }
             .sortedByDescending { it.second }
 
     fun totalsStrings(): List<String> {
@@ -138,14 +138,20 @@ class SchwabCheckingGroups(rows: List<SchwabCheckingRow>, categorizer: (SchwabCh
 
     fun totalsStringsThorough(): List<String> {
         val s = ArrayList<String>()
-        for ((desc, group) in groups) {
-            s += "$desc:"
-            s += "-".repeat(desc.length + 1)
-            s += group.cleanStringWithTotal()
+        for ((_, group) in groups) {
+            s += "${group.groupName}:"
+            s += "-".repeat(group.groupName.length + 1)
+            s += group.logStringsWithTotal()
             s += "\n"
         }
         return s
     }
+}
+
+class SchwabCheckingGroup(val groupName: String, val rows: ArrayList<SchwabCheckingRow>) {
+    val total get(): BigDecimal = computeTotal()
+    fun computeTotal(): BigDecimal = rows.computeTotal()
+    fun logStringsWithTotal(): List<String> = rows.cleanStringWithTotal()
 }
 
 fun List<SchwabCheckingRow>.bisectSchwabCheckingRows(): Pair<ArrayList<SchwabCheckingRow>, ArrayList<SchwabCheckingRow>> =

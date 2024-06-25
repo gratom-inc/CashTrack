@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-06-25 03:32:44.
+// Generated using typescript-generator version 3.2.1263 on 2024-06-25 11:23:31.
 
 export interface HelloWorld {
     desc: string;
@@ -17,7 +17,7 @@ export interface SchwabCheckingData {
 }
 
 export interface SchwabCheckingGroups {
-    groups: { [index: string]: SchwabCheckingRow[] };
+    groups: { [index: string]: SchwabCheckingGroup };
     totals: { [index: string]: number };
     grandTotal: number;
 }
@@ -31,6 +31,12 @@ export interface SchwabCheckingRow extends TrDateRow {
     balance: number;
     withdrawalN: number;
     depositN: number;
+}
+
+export interface SchwabCheckingGroup {
+    groupName: string;
+    rows: SchwabCheckingRow[];
+    total: number;
 }
 
 export interface TrDateRow {
