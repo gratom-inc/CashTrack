@@ -3,8 +3,11 @@ package assets.schwab
 import TransactionsCategorize.SchwabCheckingCategories.ccPayment
 import TransactionsCategorize.SchwabCheckingCategories.identifyDepositCategory
 import TransactionsCategorize.SchwabCheckingCategories.identifyWithdrawalCategory
+import f
 import io.github.rtmigo.dec.Dec
 import sum
+import java.text.NumberFormat
+import java.util.*
 
 class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
     val deposits: SchwabCheckingGroups
@@ -125,11 +128,12 @@ class SchwabCheckingGroups(rows: List<SchwabCheckingRow>, categorizer: (SchwabCh
     fun totalsStrings(): List<String> {
         val s = ArrayList<String>()
         val totals = computeTotals()
+        val nf = NumberFormat.getCurrencyInstance(Locale.US)
         for ((desc, total) in totals) {
-            s += "$desc: $total"
+            s += "$desc: ${total.f()}"
         }
         val grandTotal = totals.map { it.second }.sum()
-        s += "Total: $grandTotal"
+        s += "Total: ${grandTotal.f()}"
         return s
     }
 
