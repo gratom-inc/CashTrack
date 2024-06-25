@@ -1,7 +1,6 @@
 package com.gratom.cashtrack
 
-import io.github.rtmigo.dec.Dec
-import io.github.rtmigo.dec.sumOf
+import java.math.BigDecimal
 import java.text.NumberFormat
 import java.time.LocalDate
 import java.util.*
@@ -14,7 +13,5 @@ fun <T : TrDateRow> ArrayList<out T>.filterFrom(cutoffDate: LocalDate): List<T> 
     return this.filter { it.trDate >= cutoffDate }
 }
 
-fun Iterable<Dec>.sum(): Dec = sumOf { it }
-
 val numberFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale.US)
-fun Dec.f(): String = numberFormat.format(decimal)
+fun BigDecimal.f(): String = numberFormat.format(this)

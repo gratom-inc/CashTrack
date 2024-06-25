@@ -2,7 +2,7 @@ package com.gratom.cashtrack.assets.schwab
 
 import com.gratom.cashtrack.TrDateRow
 import com.gratom.cashtrack.readCsv
-import io.github.rtmigo.dec.Dec
+import java.math.BigDecimal
 
 import java.text.NumberFormat
 import java.time.LocalDate
@@ -14,11 +14,13 @@ val moneyFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale.US)
 
 fun parseDate(s: String): LocalDate = LocalDate.parse(s, dateFormat)
 fun parseInt(s: String): Int? = if (s == "") null else s.toInt()
-fun parseMoney(s: String): Dec? =
+fun parseMoney(s: String): BigDecimal? =
     if (s == "") null
     else if (s.first() == '(' && s.last() == ')')
         parseMoney(s.substring(1, s.length - 2))
-    else Dec(moneyFormat.parse(s).toFloat().toBigDecimal())
+    else moneyFormat.parse(s).toFloat().toBigDecimal()
+
+val zero = BigDecimal(0)
 
 enum class SchwabCheckingTransactionType {
     ACH,
@@ -40,9 +42,9 @@ data class SchwabCheckingRow(
     val trType: SchwabCheckingTransactionType,
     val checkNum: Int?,
     val desc: String,
-    val withdrawal: Dec?,
-    val deposit: Dec?,
-    val balance: Dec,
+    val withdrawal: BigDecimal?,
+    val deposit: BigDecimal?,
+    val balance: BigDecimal,
 ) : TrDateRow {
     constructor(
         trDate: String,
@@ -59,13 +61,13 @@ data class SchwabCheckingRow(
         desc,
         parseMoney(withdrawal).let {
             if (it != null) {
-                require(it > Dec.ZERO)
+                require(it > zero)
             }
             it
         },
         parseMoney(deposit).let {
             if (it != null) {
-                require(it > Dec.ZERO)
+                require(it > zero)
             }
             it
         },
@@ -77,8 +79,8 @@ data class SchwabCheckingRow(
         return "$trDate | $amt | $desc"
     }
 
-    val depositN get(): Dec = deposit ?: Dec.ZERO
-    val withdrawalN get(): Dec = withdrawal ?: Dec.ZERO
+    val depositN get(): BigDecimal = deposit ?: zero
+    val withdrawalN get(): BigDecimal = withdrawal ?: zero
 }
 
 fun makeSchwabCheckingRow(csvFields: List<String>): SchwabCheckingRow {
@@ -109,7 +111,8 @@ fun validateSchwabChecking(c: ArrayList<SchwabCheckingRow>) {
             expectedBalance += row.deposit
         }
 
-        if (!expectedBalance.equalsTo(row.balance)) {
+        val diff = expectedBalance.compareTo(row.balance)
+        if (diff != 0) {
             if (c[i + 1].desc == "Overdraft Protection Transfer" ||
                 "Overdraft Transfer from Brokerage -5483" in c[i + 1].desc
             ) {

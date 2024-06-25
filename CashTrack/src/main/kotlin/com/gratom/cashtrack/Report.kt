@@ -5,22 +5,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.gratom.cashtrack.assets.schwab.SchwabCheckingData
 import com.gratom.cashtrack.assets.schwab.readSchwabCheckingCsv
 
-//object LocaltimeSerializer : JsonSerializer<Coordinates>() {
-//    override fun serialize(value: Coordinates, gen: JsonGenerator, serializers: SerializerProvider) {
-//        with(gen) {
-//            writeStartObject()
-//            writeNumberField(LATITUDE_FIELD_NAME, value.first)
-//            writeNumberField(LONGITUDE_FIELD_NAME, value.second)
-//            writeEndObject()
-//        }
-//    }
-//}
-
-fun buildObjectMapper(): ObjectMapper {
-    val objectMapper = ObjectMapper()
-    objectMapper.registerModule(JavaTimeModule())
-    return objectMapper
-}
+fun buildObjectMapper(): ObjectMapper = ObjectMapper()
+    .registerModule(JavaTimeModule())
 
 val objectMapper = buildObjectMapper()
 

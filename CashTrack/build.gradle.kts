@@ -42,9 +42,6 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.apache.commons/commons-csv
     implementation("org.apache.commons:commons-csv:1.11.0")
-
-    // Dec is a simple wrapper around BigDecimal
-    implementation("io.github.rtmigo:dec:0.1.8")
 }
 
 tasks {
@@ -54,7 +51,7 @@ tasks {
         outputFileType = TypeScriptFileType.declarationFile
         classes = listOf(
             "com.gratom.cashtrack.HelloWorld",
-//            "com.gratom.cashtrack.assets.schwab.SchwabCheckingData"
+            "com.gratom.cashtrack.assets.schwab.SchwabCheckingData"
         )
         outputFile = "cashTrackTypes.d.ts"
 
