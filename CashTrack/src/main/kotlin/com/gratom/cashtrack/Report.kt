@@ -1,14 +1,7 @@
 package com.gratom.cashtrack
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.gratom.cashtrack.assets.schwab.SchwabCheckingData
 import com.gratom.cashtrack.assets.schwab.readSchwabCheckingCsv
-
-fun buildObjectMapper(): ObjectMapper = ObjectMapper()
-    .registerModule(JavaTimeModule())
-
-val objectMapper = buildObjectMapper()
 
 fun reportData() = SchwabCheckingData(
     readSchwabCheckingCsv(schwabCheckingConsolidatedCsvFilePath)

@@ -1,5 +1,6 @@
 package com.gratom.cashtrack.server
 
+import com.gratom.cashtrack.income.analyzeIncome
 import com.gratom.cashtrack.objectMapper
 import com.gratom.cashtrack.report
 import com.gratom.cashtrack.reportData
@@ -12,6 +13,7 @@ fun Application.configureRouting() {
     routing {
         get("/report") {
             val report = report().joinToString("\n")
+            analyzeIncome()
             call.respondText(
                 "<pre>\n" +
                         "$report\n" +
