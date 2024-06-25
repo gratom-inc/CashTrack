@@ -46,6 +46,7 @@ class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
         adjustSchwabBrokerageTransfers: Boolean = true
     ) {
         if (appleSavingsInterest > zero && adjustAppleSavingsInterest) {
+            val appleSavingsWithdrawals = otherWithdrawals.groups.getValue("Apple Savings Withdrawal")
             val appleSavingsDeposits = deposits.groups.getValue("Apple Savings Deposit")
             val appleSavingsDepositsLastRow = appleSavingsDeposits.rows.last
 
@@ -68,7 +69,8 @@ class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
                             BigDecimal(-1)
                         )
                     )
-                )
+                ),
+                extraInfoSubsumedGroups = listOf(appleSavingsWithdrawals, appleSavingsDeposits)
             )
         }
 
@@ -98,7 +100,8 @@ class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
                                 BigDecimal(-1)
                             )
                         )
-                    )
+                    ),
+                    extraInfoSubsumedGroups = listOf(schwabBrokerageWithdrawals, schwabBrokerageDeposits)
                 )
             }
         }
@@ -213,7 +216,11 @@ class SchwabCheckingGroups(rows: List<SchwabCheckingRow>, categorizer: (SchwabCh
     }
 }
 
-class SchwabCheckingGroup(val groupName: String, val rows: ArrayList<SchwabCheckingRow>) {
+class SchwabCheckingGroup(
+    val groupName: String,
+    val rows: ArrayList<SchwabCheckingRow>,
+    var extraInfoSubsumedGroups: List<SchwabCheckingGroup>? = null
+) {
     val total get(): BigDecimal = computeTotal()
     private fun computeTotal(): BigDecimal = rows.computeTotal()
     fun logStringsWithTotal(): List<String> = rows.cleanStringWithTotal()
