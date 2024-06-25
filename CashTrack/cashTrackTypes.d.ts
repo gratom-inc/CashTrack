@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-06-25 11:32:40.
+// Generated using typescript-generator version 3.2.1263 on 2024-06-25 13:49:17.
 
 export interface SchwabCheckingData {
     deposits: SchwabCheckingGroups;
@@ -9,6 +9,8 @@ export interface SchwabCheckingData {
     firstRow: SchwabCheckingRow;
     startingBalance: number;
     lastRow: SchwabCheckingRow;
+    sanityCheckLogs: string[];
+    appleSavingsInterest: number;
 }
 
 export interface SchwabCheckingGroups {

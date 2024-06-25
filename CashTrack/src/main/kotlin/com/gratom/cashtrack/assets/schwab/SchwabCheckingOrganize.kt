@@ -16,6 +16,9 @@ class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
     val firstRow: SchwabCheckingRow
     val startingBalance: BigDecimal
     val lastRow: SchwabCheckingRow
+    val sanityCheckLogs: List<String>
+
+    val appleSavingsInterest: BigDecimal
 
     init {
         firstRow = rows.first()
@@ -31,11 +34,18 @@ class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
         creditCardWithdrawals = SchwabCheckingGroups(ccWithdrawalRows) { identifyWithdrawalCategory(it) }
         otherWithdrawals = SchwabCheckingGroups(otherWithdrawalRows) { identifyWithdrawalCategory(it) }
 
-        sanityCheck()
+        sanityCheckLogs = sanityCheck()
+
+        appleSavingsInterest = calcAppleInterest()
+
+        makeAdjustments()
     }
 
-    private fun calcAppleInterest(): ArrayList<String> {
-        val s = ArrayList<String>()
+    private fun makeAdjustments() {
+        // TODO
+    }
+
+    private fun calcAppleInterest(): BigDecimal {
         if (deposits.groups.containsKey("Apple Savings Deposit") &&
             otherWithdrawals.groups.containsKey("Apple Savings Withdrawal")
         ) {
@@ -43,32 +53,30 @@ class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
             val appleWdrTotal = otherWithdrawals.groups.getValue("Apple Savings Withdrawal").computeTotal()
             if (appleDepTotal > appleWdrTotal) {
                 val appleInterest = appleWdrTotal + appleDepTotal
-                s += "Apple Savings Interest: $appleInterest"
+                return appleInterest
             }
         }
-        return s
+        return zero
     }
 
-    private fun sanityCheck(returnLogs: Boolean = false): List<String> {
+    private fun sanityCheck(): List<String> {
         val startingBalancePlusDepositsTotal = startingBalance + deposits.grandTotal
         val remainder = startingBalancePlusDepositsTotal +
                 (creditCardWithdrawals.grandTotal + otherWithdrawals.grandTotal)
         require(remainder == lastRow.balance)
 
         val s = ArrayList<String>()
-        if (returnLogs) {
-            s += "Starting Balance: $startingBalance"
-            s += "Starting Balance + Deposits Total: $startingBalancePlusDepositsTotal"
-            s += "Last Row Balance: ${lastRow.balance} Remainder: $remainder"
-        }
+        s += "Starting Balance: $startingBalance"
+        s += "Starting Balance + Deposits Total: $startingBalancePlusDepositsTotal"
+        s += "Last Row Balance: ${lastRow.balance} == Remainder: $remainder"
         return s
     }
 
     fun logStrings(thorough: Boolean = false): ArrayList<String> {
         val s = ArrayList<String>()
 
-        s += sanityCheck(true)
-        s += calcAppleInterest()
+        s += sanityCheckLogs
+        s += "Apple Savings Interest: $appleSavingsInterest"
 
         s += "\nOther Withdrawals:\n~~~~~~~~~~~~~~~~~~~~~~~~"
         if (thorough) {
