@@ -1,9 +1,5 @@
 package com.gratom.cashtrack
 
-import com.fasterxml.jackson.databind.ObjectMapper
-
-val objectMapper = ObjectMapper() // create once, reuse
-
 class HelloWorld {
     val desc: String = "Name"
     val amt: Double = 100.0

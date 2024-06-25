@@ -37,6 +37,9 @@ dependencies {
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     implementation("com.fasterxml.jackson.core:jackson-databind:2.17.1")
 
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.1")
+
     // https://mvnrepository.com/artifact/org.apache.commons/commons-csv
     implementation("org.apache.commons:commons-csv:1.11.0")
 
@@ -49,7 +52,10 @@ tasks {
         jsonLibrary = JsonLibrary.jackson2
         outputKind = TypeScriptOutputKind.module
         outputFileType = TypeScriptFileType.declarationFile
-        classes = listOf("com.gratom.cashtrack.HelloWorld")
+        classes = listOf(
+            "com.gratom.cashtrack.HelloWorld",
+//            "com.gratom.cashtrack.assets.schwab.SchwabCheckingData"
+        )
         outputFile = "cashTrackTypes.d.ts"
 
         doFirst {
