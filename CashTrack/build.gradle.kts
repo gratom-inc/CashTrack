@@ -2,6 +2,7 @@ import cz.habarta.typescript.generator.JsonLibrary
 import cz.habarta.typescript.generator.TypeScriptFileType
 import cz.habarta.typescript.generator.TypeScriptOutputKind
 
+val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
 
@@ -29,6 +30,7 @@ repositories {
 dependencies {
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-jetty-jvm")
+    implementation("io.ktor:ktor-server-status-pages")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
