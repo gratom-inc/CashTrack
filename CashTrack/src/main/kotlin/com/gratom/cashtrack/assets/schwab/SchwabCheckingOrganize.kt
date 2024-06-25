@@ -41,16 +41,41 @@ class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
         makeAdjustments()
     }
 
-    private fun makeAdjustments() {
-        // TODO
+    private fun makeAdjustments(adjustAppleSavingsInterest: Boolean = true) {
+        if (appleSavingsInterest > zero && adjustAppleSavingsInterest) {
+            val appleSavingsDeposits = deposits.groups.getValue("Apple Savings Deposit")
+            val appleSavingsDepositsLastRow = appleSavingsDeposits.rows.last
+
+            otherWithdrawals.groups.remove("Apple Savings Withdrawal")
+            deposits.groups.remove("Apple Savings Deposit")
+
+            val groupName = "Apple Savings Interest"
+            deposits.groups[groupName] = SchwabCheckingGroup(
+                groupName,
+                ArrayList(
+                    listOf(
+                        SchwabCheckingRow(
+                            appleSavingsDepositsLastRow.trDate,
+                            appleSavingsDepositsLastRow.trType,
+                            appleSavingsDepositsLastRow.checkNum,
+                            "(Adjusted) Total Apple Savings Interest",
+                            appleSavingsDepositsLastRow.withdrawal,
+                            appleSavingsInterest,
+                            BigDecimal(-1)
+                        )
+                    )
+                )
+            )
+        }
+
     }
 
     private fun calcAppleInterest(): BigDecimal {
         if (deposits.groups.containsKey("Apple Savings Deposit") &&
             otherWithdrawals.groups.containsKey("Apple Savings Withdrawal")
         ) {
-            val appleDepTotal = deposits.groups.getValue("Apple Savings Deposit").computeTotal()
-            val appleWdrTotal = otherWithdrawals.groups.getValue("Apple Savings Withdrawal").computeTotal()
+            val appleDepTotal = deposits.groups.getValue("Apple Savings Deposit").total
+            val appleWdrTotal = otherWithdrawals.groups.getValue("Apple Savings Withdrawal").total
             if (appleDepTotal > appleWdrTotal) {
                 val appleInterest = appleWdrTotal + appleDepTotal
                 return appleInterest
@@ -68,15 +93,13 @@ class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
         val s = ArrayList<String>()
         s += "Starting Balance: $startingBalance"
         s += "Starting Balance + Deposits Total: $startingBalancePlusDepositsTotal"
-        s += "Last Row Balance: ${lastRow.balance} == Remainder: $remainder"
+        s += "Final Row Balance: ${lastRow.balance} == Remainder: $remainder"
         return s
     }
 
     fun logStrings(thorough: Boolean = false): ArrayList<String> {
         val s = ArrayList<String>()
-
         s += sanityCheckLogs
-        s += "Apple Savings Interest: $appleSavingsInterest"
 
         s += "\nOther Withdrawals:\n~~~~~~~~~~~~~~~~~~~~~~~~"
         if (thorough) {
@@ -129,7 +152,7 @@ class SchwabCheckingGroups(rows: List<SchwabCheckingRow>, categorizer: (SchwabCh
 
     val totals get(): Map<String, BigDecimal> = computeTotals().toMap()
     private fun computeTotals(): List<Pair<String, BigDecimal>> =
-        groups.map { (_, group) -> Pair(group.groupName, group.computeTotal()) }
+        groups.map { (_, group) -> Pair(group.groupName, group.total) }
             .sortedByDescending { it.second }
 
     fun totalsStrings(): List<String> {
@@ -158,7 +181,7 @@ class SchwabCheckingGroups(rows: List<SchwabCheckingRow>, categorizer: (SchwabCh
 
 class SchwabCheckingGroup(val groupName: String, val rows: ArrayList<SchwabCheckingRow>) {
     val total get(): BigDecimal = computeTotal()
-    fun computeTotal(): BigDecimal = rows.computeTotal()
+    private fun computeTotal(): BigDecimal = rows.computeTotal()
     fun logStringsWithTotal(): List<String> = rows.cleanStringWithTotal()
 }
 
