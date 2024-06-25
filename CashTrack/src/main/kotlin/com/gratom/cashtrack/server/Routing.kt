@@ -1,6 +1,5 @@
 package com.gratom.cashtrack.server
 
-import com.gratom.cashtrack.foo
 import com.gratom.cashtrack.objectMapper
 import com.gratom.cashtrack.report
 import com.gratom.cashtrack.reportData
@@ -11,9 +10,6 @@ import io.ktor.server.routing.*
 
 fun Application.configureRouting() {
     routing {
-        get("/hello") {
-            call.respondText("Hello: ${foo()}", status = HttpStatusCode.OK)
-        }
         get("/report") {
             val report = report().joinToString("\n")
             call.respondText(

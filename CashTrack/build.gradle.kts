@@ -50,7 +50,6 @@ tasks {
         outputKind = TypeScriptOutputKind.module
         outputFileType = TypeScriptFileType.declarationFile
         classes = listOf(
-            "com.gratom.cashtrack.HelloWorld",
             "com.gratom.cashtrack.assets.schwab.SchwabCheckingData"
         )
         outputFile = "cashTrackTypes.d.ts"
