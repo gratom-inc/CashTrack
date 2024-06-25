@@ -12,5 +12,6 @@ fun main() {
 
 fun Application.module() {
     configureAdministration()
+    configureStatusPages()
     configureRouting()
 }
