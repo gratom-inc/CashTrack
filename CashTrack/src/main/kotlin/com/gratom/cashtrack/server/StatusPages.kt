@@ -1,4 +1,4 @@
-package com.gratom.server.plugins
+package com.gratom.cashtrack.server
 
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -14,5 +14,6 @@ fun Application.configureStatusPages() {
         status(HttpStatusCode.NotFound) { call, status ->
             call.respondText(text = "404: Not Found", status = status)
         }
+        status(HttpStatusCode.OK) { _, _ -> }
     }
 }

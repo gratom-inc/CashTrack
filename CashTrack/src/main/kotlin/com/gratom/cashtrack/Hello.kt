@@ -1,4 +1,4 @@
-package com.gratom
+package com.gratom.cashtrack
 
 import com.fasterxml.jackson.databind.ObjectMapper
 

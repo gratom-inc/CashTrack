@@ -1,3 +1,5 @@
+package com.gratom.cashtrack
+
 import io.github.rtmigo.dec.Dec
 import io.github.rtmigo.dec.sumOf
 import java.text.NumberFormat
@@ -15,4 +17,4 @@ fun <T : TrDateRow> ArrayList<out T>.filterFrom(cutoffDate: LocalDate): List<T> 
 fun Iterable<Dec>.sum(): Dec = sumOf { it }
 
 val numberFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale.US)
-fun Dec.f() = numberFormat.format(decimal)
+fun Dec.f(): String = numberFormat.format(decimal)

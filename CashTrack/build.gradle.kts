@@ -16,7 +16,7 @@ group = "com.gratom"
 version = "0.0.1"
 
 application {
-    mainClass.set("com.gratom.ApplicationKt")
+    mainClass.set("com.gratom.cashtrack.ApplicationKt")
 
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
@@ -36,6 +36,12 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     implementation("com.fasterxml.jackson.core:jackson-databind:2.17.1")
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-csv
+    implementation("org.apache.commons:commons-csv:1.11.0")
+
+    // Dec is a simple wrapper around BigDecimal
+    implementation("io.github.rtmigo:dec:0.1.8")
 }
 
 tasks {
@@ -43,7 +49,7 @@ tasks {
         jsonLibrary = JsonLibrary.jackson2
         outputKind = TypeScriptOutputKind.module
         outputFileType = TypeScriptFileType.declarationFile
-        classes = listOf("com.gratom.HelloWorld")
+        classes = listOf("com.gratom.cashtrack.HelloWorld")
         outputFile = "cashTrackTypes.d.ts"
 
         doFirst {

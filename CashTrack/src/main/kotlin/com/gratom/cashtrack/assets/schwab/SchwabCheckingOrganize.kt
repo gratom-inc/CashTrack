@@ -1,13 +1,16 @@
-package assets.schwab
+package com.gratom.cashtrack.assets.schwab
 
-import TransactionsCategorize.SchwabCheckingCategories.ccPayment
-import TransactionsCategorize.SchwabCheckingCategories.identifyDepositCategory
-import TransactionsCategorize.SchwabCheckingCategories.identifyWithdrawalCategory
-import f
+import com.gratom.cashtrack.TransactionsCategorize.SchwabCheckingCategories.ccPayment
+import com.gratom.cashtrack.TransactionsCategorize.SchwabCheckingCategories.identifyDepositCategory
+import com.gratom.cashtrack.TransactionsCategorize.SchwabCheckingCategories.identifyWithdrawalCategory
+import com.gratom.cashtrack.f
+import com.gratom.cashtrack.sum
+
 import io.github.rtmigo.dec.Dec
-import sum
+
 import java.text.NumberFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
     val deposits: SchwabCheckingGroups
@@ -65,7 +68,7 @@ class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
         return s
     }
 
-    fun logStrings(thorough: Boolean = false): List<String> {
+    fun logStrings(thorough: Boolean = false): ArrayList<String> {
         val s = ArrayList<String>()
 
         s += sanityCheck(true)

@@ -1,6 +1,8 @@
-package com.gratom
+package com.gratom.cashtrack
 
-import com.gratom.server.plugins.*
+import com.gratom.cashtrack.server.configureAdministration
+import com.gratom.cashtrack.server.configureRouting
+import com.gratom.cashtrack.server.configureStatusPages
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.jetty.*

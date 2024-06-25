@@ -1,4 +1,4 @@
-package com.gratom.server.plugins
+package com.gratom.cashtrack.server
 
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
