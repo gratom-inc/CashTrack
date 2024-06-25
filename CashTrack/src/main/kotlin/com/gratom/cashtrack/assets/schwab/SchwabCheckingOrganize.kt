@@ -41,7 +41,10 @@ class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
         makeAdjustments()
     }
 
-    private fun makeAdjustments(adjustAppleSavingsInterest: Boolean = true) {
+    private fun makeAdjustments(
+        adjustAppleSavingsInterest: Boolean = true,
+        adjustSchwabBrokerageTransfers: Boolean = true
+    ) {
         if (appleSavingsInterest > zero && adjustAppleSavingsInterest) {
             val appleSavingsDeposits = deposits.groups.getValue("Apple Savings Deposit")
             val appleSavingsDepositsLastRow = appleSavingsDeposits.rows.last
@@ -61,6 +64,7 @@ class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
                             "(Adjusted) Total Apple Savings Interest",
                             appleSavingsDepositsLastRow.withdrawal,
                             appleSavingsInterest,
+                            /** Only used by [[sanityCheck]]. */
                             BigDecimal(-1)
                         )
                     )
@@ -68,6 +72,36 @@ class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
             )
         }
 
+        if (adjustSchwabBrokerageTransfers) {
+            val schwabBrokerageDeposits = deposits.groups.getValue("Transfer from Schwab Brokerage")
+            val schwabBrokerageWithdrawals = otherWithdrawals.groups.getValue("Transfer to Schwab Brokerage")
+            val schwabBrokerageDepTotal = schwabBrokerageDeposits.total
+            val schwabBrokerageWdrTotal = schwabBrokerageWithdrawals.total
+            if (schwabBrokerageDepTotal > schwabBrokerageWdrTotal) {
+                val schwabBrokerageDepLastRow = schwabBrokerageDeposits.rows.last
+                val schwabBrokerageExtra = schwabBrokerageWdrTotal + schwabBrokerageDepTotal
+                deposits.groups.remove("Transfer from Schwab Brokerage")
+                otherWithdrawals.groups.remove("Transfer to Schwab Brokerage")
+                val groupName = "Extra from Schwab Brokerage"
+                deposits.groups[groupName] = SchwabCheckingGroup(
+                    groupName,
+                    ArrayList(
+                        listOf(
+                            SchwabCheckingRow(
+                                schwabBrokerageDepLastRow.trDate,
+                                schwabBrokerageDepLastRow.trType,
+                                schwabBrokerageDepLastRow.checkNum,
+                                "(Adjusted) Total Extra from Schwab Brokerage",
+                                schwabBrokerageDepLastRow.withdrawal,
+                                schwabBrokerageExtra,
+                                /** Only used by [[sanityCheck]]. */
+                                BigDecimal(-1)
+                            )
+                        )
+                    )
+                )
+            }
+        }
     }
 
     private fun calcAppleInterest(): BigDecimal {
