@@ -47,13 +47,17 @@ dependencies {
     implementation("org.apache.commons:commons-csv:1.11.0")
 
     // https://mvnrepository.com/artifact/org.graalvm.sdk/graal-sdk
-    implementation("org.graalvm.sdk:graal-sdk:24.0.1")
+    implementation("org.graalvm.sdk:graal-sdk:23.0.4")
 
     // https://mvnrepository.com/artifact/org.graalvm.js/js-scriptengine
-    implementation("org.graalvm.js:js-scriptengine:24.0.1")
+    implementation("org.graalvm.js:js-scriptengine:23.0.4")
 
     // https://mvnrepository.com/artifact/org.graalvm.js/js
     implementation("org.graalvm.js:js:23.0.4")
+
+    // C.f. https://stackoverflow.com/questions/72341934/graaljs-error-could-not-initialize-class-com-oracle-truffle-js-runtime-jscontex
+    // https://mvnrepository.com/artifact/com.ibm.icu/icu4j
+    implementation("com.ibm.icu:icu4j:75.1")
 }
 
 tasks {

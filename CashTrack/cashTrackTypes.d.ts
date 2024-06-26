@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-06-26 00:16:36.
+// Generated using typescript-generator version 3.2.1263 on 2024-06-26 00:39:46.
 
 export interface SchwabCheckingData {
     deposits: SchwabCheckingGroups;

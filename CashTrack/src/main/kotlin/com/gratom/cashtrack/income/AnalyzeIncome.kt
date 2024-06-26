@@ -4,6 +4,8 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.gratom.cashtrack.objectMapper
 import com.gratom.cashtrack.paychecksJsonFilePath
 import java.io.File
+import javax.script.Compilable
+import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
 
 
@@ -37,7 +39,8 @@ data class HelloUser(
     val email: String
 )
 
-//val jacksonMapper = jacksonObjectMapper().registerKotlinModule()
+val scriptEngineManager = ScriptEngineManager()
+val javaScriptEngine: ScriptEngine = scriptEngineManager.getEngineByName("JavaScript")
 
 fun analyzeIncome(): String {
     var s: String = "Income: \n"
@@ -45,22 +48,14 @@ fun analyzeIncome(): String {
     val paychecksJson = File(paychecksJsonFilePath).readText()
     // NOTE: https://github.com/FasterXML/jackson-module-kotlin/issues/437
     val state = objectMapper.readValue<List<EmployerIncomeUS>>(paychecksJson)
+    s += "ReadJSON:\n" + state.joinToString("\n") + "\n"
 
-    val manager = ScriptEngineManager()
-    s += "Number of engines: ${manager.engineFactories.size}\n"
-    manager.engineFactories.forEach {
-        s += "${it.engineName}\n"
-    }
+//    s += "Engine: $javaScriptEngine\n"
 
-    val engine = manager.getEngineByName("js")
-    val engine2 = manager.getEngineByName("JavaScript")
-    s += "Engine: $engine\n"
-    s += "Engine2: $engine\n"
+    val script = (javaScriptEngine as Compilable).compile("1 + 2")
+    val x = script.eval(javaScriptEngine.context)
 
-//    for (ScriptEngineFactory f : manager.getEngineFactories()) {
-//        printEngineInfo(f)
-//    }
-
+    s += "$x"
 //    val engine = mgr.getEngineByName("JavaScript")
 //    val foo = "40+2"
 //    val x = engine.eval(foo)
