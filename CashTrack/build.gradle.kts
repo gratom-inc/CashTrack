@@ -54,10 +54,6 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.graalvm.js/js
     implementation("org.graalvm.js:js:23.0.4")
-
-    // C.f. https://stackoverflow.com/questions/72341934/graaljs-error-could-not-initialize-class-com-oracle-truffle-js-runtime-jscontex
-    // https://mvnrepository.com/artifact/com.ibm.icu/icu4j
-    implementation("com.ibm.icu:icu4j:75.1")
 }
 
 tasks {
