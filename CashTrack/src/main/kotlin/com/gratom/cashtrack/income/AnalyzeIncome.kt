@@ -1,8 +1,7 @@
 package com.gratom.cashtrack.income
 
-import com.fasterxml.jackson.module.kotlin.readValue
-import com.gratom.cashtrack.objectMapper
-import com.gratom.cashtrack.paychecksJsonFilePath
+// NOTE: https://github.com/FasterXML/jackson-module-kotlin/issues/437
+import com.gratom.cashtrack.paychecksJsFilePath
 import java.io.File
 import javax.script.Compilable
 import javax.script.ScriptEngine
@@ -45,21 +44,14 @@ val javaScriptEngine: ScriptEngine = scriptEngineManager.getEngineByName("JavaSc
 fun analyzeIncome(): String {
     var s: String = "Income: \n"
 
-    val paychecksJson = File(paychecksJsonFilePath).readText()
-    // NOTE: https://github.com/FasterXML/jackson-module-kotlin/issues/437
-    val state = objectMapper.readValue<List<EmployerIncomeUS>>(paychecksJson)
-    s += "ReadJSON:\n" + state.joinToString("\n") + "\n"
+    val paychecksJs = File(paychecksJsFilePath).readText()
+    val script = (javaScriptEngine as Compilable).compile(paychecksJs)
+    val scriptEvalResult = script.eval(javaScriptEngine.context)
+    val paychecksJson: String = scriptEvalResult as String
+    s += paychecksJson
 
-//    s += "Engine: $javaScriptEngine\n"
-
-    val script = (javaScriptEngine as Compilable).compile("1 + 2")
-    val x = script.eval(javaScriptEngine.context)
-
-    s += "$x"
-//    val engine = mgr.getEngineByName("JavaScript")
-//    val foo = "40+2"
-//    val x = engine.eval(foo)
-//    s += "$x"
+//    val state = objectMapper.readValue<List<EmployerIncomeUS>>(paychecksJson)
+//    s += "ReadJSON:\n" + state.joinToString("\n") + "\n"
 
     return s
 }
