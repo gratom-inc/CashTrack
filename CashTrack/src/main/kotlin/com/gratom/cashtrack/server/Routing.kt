@@ -6,11 +6,23 @@ import com.gratom.cashtrack.report
 import com.gratom.cashtrack.reportData
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.html.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.html.body
+import kotlinx.html.h1
 
 fun Application.configureRouting() {
     routing {
+        get("/hello") {
+            call.respondHtml(HttpStatusCode.OK) {
+                body {
+                    h1 {
+                        +"Hello World!"
+                    }
+                }
+            }
+        }
         get("/income") {
             val incomeHtml = analyzeIncome()
             call.respondText(
