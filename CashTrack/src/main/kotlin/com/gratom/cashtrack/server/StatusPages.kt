@@ -9,11 +9,10 @@ fun Application.configureStatusPages() {
     install(StatusPages) {
         exception<Throwable> { call, cause ->
             cause.printStackTrace()
-            call.respondText(text = "500: $cause" , status = HttpStatusCode.InternalServerError)
+            call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
         }
         status(HttpStatusCode.NotFound) { call, status ->
             call.respondText(text = "404: Not Found", status = status)
         }
-        status(HttpStatusCode.OK) { _, _ -> }
     }
 }

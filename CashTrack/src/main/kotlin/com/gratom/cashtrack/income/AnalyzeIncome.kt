@@ -34,12 +34,6 @@ data class PaycheckUS(
     val other: Double = 0.0
 )
 
-data class HelloUser(
-    val id: Int,
-    val name: String,
-    val email: String
-)
-
 val scriptEngineManager = ScriptEngineManager()
 val javaScriptEngine: ScriptEngine = scriptEngineManager.getEngineByName("JavaScript")
 
