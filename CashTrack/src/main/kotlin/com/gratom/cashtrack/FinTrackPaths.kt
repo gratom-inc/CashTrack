@@ -8,3 +8,4 @@ const val schwabCheckingConsolidatedCsvFilePath =
 val schwabCheckingCutoffDateA = parseDate("05/01/2022") // parseDate("10/23/2020")
 
 const val paychecksJsonFilePath = "../../AllTrack/Code/Old/Ancient/Paychecks.json"
+const val paychecksJsFilePath = "../../AllTrack/Code/Old/Ancient/Paychecks.js"

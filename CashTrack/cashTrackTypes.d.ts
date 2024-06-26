@@ -1,22 +1,25 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-06-25 16:48:20.
+// Generated using typescript-generator version 3.2.1263 on 2024-06-26 00:16:36.
 
 export interface SchwabCheckingData {
     deposits: SchwabCheckingGroups;
     creditCardWithdrawals: SchwabCheckingGroups;
     otherWithdrawals: SchwabCheckingGroups;
-    firstRow: SchwabCheckingRow;
-    startingBalance: number;
-    lastRow: SchwabCheckingRow;
     sanityCheckLogs: string[];
-    appleSavingsInterest: number;
 }
 
 export interface SchwabCheckingGroups {
     groups: { [index: string]: SchwabCheckingGroup };
     totals: { [index: string]: number };
     grandTotal: number;
+}
+
+export interface SchwabCheckingGroup {
+    groupName: string;
+    rows: SchwabCheckingRow[];
+    extraInfoSubsumedGroups: SchwabCheckingGroup[] | null;
+    total: number;
 }
 
 export interface SchwabCheckingRow extends TrDateRow {
@@ -28,13 +31,6 @@ export interface SchwabCheckingRow extends TrDateRow {
     balance: number;
     withdrawalN: number;
     depositN: number;
-}
-
-export interface SchwabCheckingGroup {
-    groupName: string;
-    rows: SchwabCheckingRow[];
-    extraInfoSubsumedGroups: SchwabCheckingGroup[] | null;
-    total: number;
 }
 
 export interface TrDateRow {

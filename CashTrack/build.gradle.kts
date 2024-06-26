@@ -45,6 +45,15 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.apache.commons/commons-csv
     implementation("org.apache.commons:commons-csv:1.11.0")
+
+    // https://mvnrepository.com/artifact/org.graalvm.sdk/graal-sdk
+    implementation("org.graalvm.sdk:graal-sdk:24.0.1")
+
+    // https://mvnrepository.com/artifact/org.graalvm.js/js-scriptengine
+    implementation("org.graalvm.js:js-scriptengine:24.0.1")
+
+    // https://mvnrepository.com/artifact/org.graalvm.js/js
+    implementation("org.graalvm.js:js:23.0.4")
 }
 
 tasks {

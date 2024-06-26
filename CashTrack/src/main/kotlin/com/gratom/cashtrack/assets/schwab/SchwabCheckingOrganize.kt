@@ -13,17 +13,13 @@ class SchwabCheckingData(rows: List<SchwabCheckingRow>) {
     val creditCardWithdrawals: SchwabCheckingGroups
     val otherWithdrawals: SchwabCheckingGroups
 
-    val firstRow: SchwabCheckingRow
-    val startingBalance: BigDecimal
-    val lastRow: SchwabCheckingRow
+    private val firstRow: SchwabCheckingRow = rows.first()
+    private val lastRow: SchwabCheckingRow = rows.last()
+    private val startingBalance: BigDecimal = firstRow.balance - firstRow.depositN + firstRow.withdrawalN
     val sanityCheckLogs: List<String>
-
-    val appleSavingsInterest: BigDecimal
+    private val appleSavingsInterest: BigDecimal
 
     init {
-        firstRow = rows.first()
-        lastRow = rows.last()
-        startingBalance = firstRow.balance - firstRow.depositN + firstRow.withdrawalN
 
         val (depositRows, withdrawalRows) = rows.bisectSchwabCheckingRows()
         deposits = SchwabCheckingGroups(depositRows) { identifyDepositCategory(it) }

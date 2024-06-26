@@ -11,13 +11,18 @@ import io.ktor.server.routing.*
 
 fun Application.configureRouting() {
     routing {
+        get("/income") {
+            val incomeHtml = analyzeIncome()
+            call.respondText(
+                "<pre>\n$incomeHtml\n</pre>",
+                status = HttpStatusCode.OK,
+                contentType = ContentType.Text.Html.withCharset(Charsets.UTF_8)
+            )
+        }
         get("/report") {
             val report = report().joinToString("\n")
-            analyzeIncome()
             call.respondText(
-                "<pre>\n" +
-                        "$report\n" +
-                        "</pre>",
+                "<pre>\n$report\n</pre>",
                 status = HttpStatusCode.OK,
                 contentType = ContentType.Text.Html.withCharset(Charsets.UTF_8)
             )
