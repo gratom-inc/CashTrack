@@ -1,15 +1,17 @@
 package com.gratom.cashtrack.income
 
 // NOTE: https://github.com/FasterXML/jackson-module-kotlin/issues/437
+import com.fasterxml.jackson.module.kotlin.readValue
+import com.gratom.cashtrack.objectMapper
 import com.gratom.cashtrack.paychecksJsFilePath
 import java.io.File
 import javax.script.Compilable
 import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
 
+typealias Paychecks = Map<String, EmployerIncomeUS>
 
 data class EmployerIncomeUS(
-    val name: String = "",
     val start_offset: Int = 0,
     val final_offset: Int = 0,
     val paychecks: Map<String, PaycheckUS> = mapOf(),
@@ -42,16 +44,19 @@ val scriptEngineManager = ScriptEngineManager()
 val javaScriptEngine: ScriptEngine = scriptEngineManager.getEngineByName("JavaScript")
 
 fun analyzeIncome(): String {
-    var s: String = "Income: \n"
-
     val paychecksJs = File(paychecksJsFilePath).readText()
     val script = (javaScriptEngine as Compilable).compile(paychecksJs)
     val scriptEvalResult = script.eval(javaScriptEngine.context)
     val paychecksJson: String = scriptEvalResult as String
-    s += paychecksJson
 
-//    val state = objectMapper.readValue<List<EmployerIncomeUS>>(paychecksJson)
-//    s += "ReadJSON:\n" + state.joinToString("\n") + "\n"
+    val paychecks: Paychecks = objectMapper.readValue<Map<String, EmployerIncomeUS>>(paychecksJson)
 
+    var s: String = "Income: \n"
+    paychecks.forEach { (employerName, employerIncome) ->
+        s += "$employerName\n"
+        employerIncome.paychecks.forEach { paycheck ->
+            s += "$paycheck\n"
+        }
+    }
     return s
 }
