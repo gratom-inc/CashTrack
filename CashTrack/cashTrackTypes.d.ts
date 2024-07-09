@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-06-26 01:24:03.
+// Generated using typescript-generator version 3.2.1263 on 2024-07-09 14:03:45.
 
 export interface SchwabCheckingData {
     deposits: SchwabCheckingGroups;
@@ -29,8 +29,8 @@ export interface SchwabCheckingRow extends TrDateRow {
     withdrawal: number | null;
     deposit: number | null;
     balance: number;
-    withdrawalN: number;
     depositN: number;
+    withdrawalN: number;
 }
 
 export interface TrDateRow {

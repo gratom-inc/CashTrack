@@ -38,13 +38,17 @@ data class PaycheckUS(
 val scriptEngineManager = ScriptEngineManager()
 val javaScriptEngine: ScriptEngine = scriptEngineManager.getEngineByName("JavaScript")
 
-fun analyzeIncome(): String {
+fun getPaychecks(): Paychecks {
     val paychecksJs = File(paychecksJsFilePath).readText()
     val script = (javaScriptEngine as Compilable).compile(paychecksJs)
     val scriptEvalResult = script.eval(javaScriptEngine.context)
     val paychecksJson: String = scriptEvalResult as String
-
     val paychecks: Paychecks = objectMapper.readValue<Map<String, EmployerIncomeUS>>(paychecksJson)
+    return paychecks
+}
+
+fun analyzeIncome(): String {
+    val paychecks: Paychecks = getPaychecks()
 
     var s: String = "Income: \n"
     paychecks.forEach { (employerName, employerIncome) ->

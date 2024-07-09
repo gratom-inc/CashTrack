@@ -1,6 +1,7 @@
 package com.gratom.cashtrack.server
 
 import com.gratom.cashtrack.income.analyzeIncome
+import com.gratom.cashtrack.income.getPaychecks
 import com.gratom.cashtrack.objectMapper
 import com.gratom.cashtrack.report
 import com.gratom.cashtrack.reportData
@@ -29,6 +30,15 @@ fun Application.configureRouting() {
                 "<pre>\n$incomeHtml\n</pre>",
                 status = HttpStatusCode.OK,
                 contentType = ContentType.Text.Html.withCharset(Charsets.UTF_8)
+            )
+        }
+        get("/paychecksJson") {
+            val paychecks = getPaychecks()
+            val paychecksJson = objectMapper.writeValueAsString(paychecks)
+            call.respondText(
+                paychecksJson,
+                status = HttpStatusCode.OK,
+                contentType = ContentType.Application.Json.withCharset(Charsets.UTF_8)
             )
         }
         get("/report") {
